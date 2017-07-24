@@ -15,7 +15,7 @@ function fileSearch() {
 		var strStart = "" + start.getFullYear() + "-";
 		strStart += (start.getMonth() + 1) + "-";
 		strStart += start.getDate();
-		console.log(strStart);
+	//	console.log(strStart);
 	} else if (value == "2") {
 		$(".summary_cont").css('display', 'block');
 		var start = new Date(end.setMonth(end.getMonth() - 1));
@@ -34,8 +34,8 @@ function fileSearch() {
 		$(".summary_cont").css('display', 'block');
 		var strEnd = $(".lol_end").val();
 		var strStart = $(".lol_begin").val();
-		console.log(strEnd);
-		console.log(strStart);
+//		console.log(strEnd);
+//		console.log(strStart);
 	} else {
 
 	}
@@ -253,10 +253,10 @@ function selectClusters(){
 	var num = $("#clusternum_input").val();
 	$(".summary_tab tr").each(function(){
 		var clusterNum = $(this).find('a:not(:first)').text();
-		console.log(num+'--');
-		console.log(clusterNum);
+//		console.log(num+'--');
+//		console.log(clusterNum);
 		if(num == clusterNum){
-			console.log('yes');
+//			console.log('yes');
 			$(this).find('input:checkbox').prop("checked", true);
 		}
 	})

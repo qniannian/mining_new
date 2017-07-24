@@ -89,6 +89,9 @@ public class issue_labelServiceImpl implements issue_labelService {
 	{
 		//根据任务ID找出该任务中所有的文件ID
     	List<StandardResult> stdResList = standardResultService.queryStdRessByIssueId(issueId);
+    	if (stdResList.size()==0) {
+			return null;
+		}
         List<String[]> content = new ArrayList<String[]>(); //存储所有文件的有效内容
         URLTool urlTool = new URLTool();
     	for (int i=0; i < stdResList.size();i++) 
@@ -113,6 +116,9 @@ public class issue_labelServiceImpl implements issue_labelService {
 				}
                 content.addAll(uRList);
     		}
+		}
+    	if (content.size()==0) {
+			return null;
 		}
     	List<String[]> result = urlTool.statisticUrl(content);
 		return result;

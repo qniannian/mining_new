@@ -27,7 +27,11 @@ public class WebsiteDao {
     public String queryTypeByUrl(String url) {
         WebsiteExample example = new WebsiteExample();
         example.createCriteria().andUrlEqualTo(url);
-        return websiteMapper.selectByExample(example).get(0).getType();
+        List<Website> list = websiteMapper.selectByExample(example);
+        if(list == null || list.isEmpty()){
+        	return "";
+        }
+        return list.get(0).getType();
     }
 
     public Website queryByUrl(String url) {

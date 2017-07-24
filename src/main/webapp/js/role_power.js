@@ -34,14 +34,15 @@ function getIncludePowers(roleId) {
 							});
 
 				} else {
-					console.log(msg.result);
+				//	console.log(msg.result);
+					alert(msg.result);
 				}
 			},
 			complete : function() {
 				getNotIncludePowers(roleId, count);
 			},
 			error : function(msg) {
-				alert(msg.result);
+				alert(eval('(' + msg.responseText + ')').result);
 			}
 		})
 }
@@ -68,14 +69,15 @@ function getNotIncludePowers(roleId, index) {
 								$('#role_power_tab').append(row);
 							})
 				} else {
-					console.log(msg.result);
+				//	console.log(msg.result);
+					alert(msg.result);
 				}
 			},
 			complete : function() {
-				console.log("all")
+			//	console.log("all")
 			},
 			error : function(msg) {
-				alert(msg.result);
+				alert(eval('(' + msg.responseText + ')').result);
 			}
 		})
 }
@@ -117,7 +119,7 @@ function changeRole() {
 		},
 		dataType : "json",
 		success : function(msg) {
-			
+			console.log(msg);
 			if (msg.status == "OK") {
 				alert("修改角色信息成功");
 				baseAjax("role_infor");
@@ -126,7 +128,8 @@ function changeRole() {
 			}
 		},
 		error : function(msg) {
-			alert(msg.result);
+			
+			alert(eval('(' + msg.responseText + ')').result);
 		}
 	})
 }

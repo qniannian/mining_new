@@ -4,7 +4,7 @@
 //停用词信息展示
 
 function stopwordInforShow(page){
-    console.log(page+"--------------")
+ //   console.log(page+"--------------")
     search_click=false;
     $.ajax({
         type:"post",
@@ -303,7 +303,7 @@ function stopwordInforAdd(){
 $(function(){
     $(".infor_tab02").on("click",".delStopword",function(){
         var stopword_id = $(this).attr("id");
-        console.log(stopword_id);
+  //      console.log(stopword_id);
         stopwordInforDel(stopword_id);
         function stopwordInforDel(stopword_id){
             $.ajax({

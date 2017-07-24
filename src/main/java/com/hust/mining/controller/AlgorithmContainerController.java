@@ -92,14 +92,14 @@ public class AlgorithmContainerController {
 		OutputStream outputStream = null;
 		try {
 			List<String[]> list = algorithmContainerService.Downloade(request);
-			System.out.println("输出结果：");
+//			System.out.println("输出结果：");
 			for (String[] strings : list) {
 				for (String string : strings) {
-					System.out.print(string+"  ");
+//					System.out.print(string+"  ");
 				}
-				System.out.println();
+//				System.out.println();
 			}
-			System.out.println("输出完");
+			//System.out.println("输出完");
 			if (list == null) {
 				response.sendError(404, "导出错误");
 				return;

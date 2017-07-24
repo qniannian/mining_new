@@ -4,7 +4,7 @@ $('#myTab li:eq(0) a').click(function (e){
 	  $(this).tab('show')
 	  showlabelofStandard(); //显示已有的标签
 	  showlabelNotInStandard();//显示没有的标签
-	  console.log("---------")
+//	  console.log("---------")
 	  
 })
 
@@ -13,25 +13,25 @@ $('#myTab li:eq(0) a').click(function (e){
 function showcountwebsite()
 {
 	var issueId = getCookie("issueId");
-	console.log("当前话题ID是："+issueId);
+//	console.log("当前话题ID是："+issueId);
 	$.ajax({
 		type:"post",
 		url:"/issue/countURL",
 		data:{issueId:issueId},
 		datatype:"json",
 		success: function(msg){
-			console.log("URL后台是：");
-			console.log(msg);
+//			console.log("URL后台是：");
+//			console.log(msg);
 			if( msg.status == "OK"){
 				var items = msg.result ; //从后台获取的为label实体
 				var cookie_value1;
 				$('#websiteCountInfo').html("");
 				$.each(items,function(idx,item) {
-					row= '<P>'+item+'</P>'
+					row= '<P>'+item[0]+'&nbsp;&nbsp;&nbsp;'+item[1]+'&nbsp;&nbsp;&nbsp;'+item[2]+'</P>'
                     $('#websiteCountInfo').append(row);
 				});
 			}else{
-				$('#websiteCountInfo').html("");
+				$('#websiteCountInfo').html(msg.result);
 			}
 		},
 		error: function(){
@@ -45,15 +45,15 @@ function showcountwebsite()
 function showlabelofStandard()
 {
 	var issueId = getCookie("issueId");
-	console.log("当前话题ID是："+issueId);
+//	console.log("当前话题ID是："+issueId);
 	$.ajax({
 		type:"post",
 		url:"/issue/selectLabelsForStandResult",
 		data:{issueId:issueId},
 		datatype:"json",
 		success: function(msg){
-			console.log("已有后台是：");
-			console.log(msg);
+//			console.log("已有后台是：");
+//			console.log(msg);
 			if( msg.status == "OK"){
 				var items = msg.result ; //从后台获取的为label实体
 				var cookie_value1;
@@ -79,15 +79,15 @@ function showlabelofStandard()
 function showlabelNotInStandard()
 {
 	var issueId = getCookie("issueId");
-	console.log("当前话题ID是："+issueId);
+//	console.log("当前话题ID是："+issueId);
 	$.ajax({
 		type:"post",
 		url:"/issue/findLabelNotInStandardResult",
 		data:{issueId:issueId},
 		datatype:"json",
 		success: function(msg){
-			console.log("没有后台是：");
-			console.log(msg);
+//			console.log("没有后台是：");
+//			console.log(msg);
 			if( msg.status == "OK"){
 				var items = msg.result ; //从后台获取的为label实体
 				var cookie_value1;
@@ -111,8 +111,8 @@ function showlabelNotInStandard()
 
 function deleteLabelOfStandard(labelid,issueId) 
 {
-	console.log("需要删除标签的话题ID是："+issueId);
-	console.log("需要删除标签ID是："+labelid);
+//	console.log("需要删除标签的话题ID是："+issueId);
+//	console.log("需要删除标签ID是："+labelid);
 	$.ajax({
 		type:"post",
 		url:"/issue/deleteLabelOfStandard",
@@ -134,8 +134,8 @@ function deleteLabelOfStandard(labelid,issueId)
 
 function setLabelForStandardResult(labelid,issueId) 
 {
-	console.log("需要添加标签的话题ID是："+issueId);
-	console.log("需要添加标签ID是："+labelid);
+//	console.log("需要添加标签的话题ID是："+issueId);
+//	console.log("需要添加标签ID是："+labelid);
 	$.ajax({
 		type:"post",
 		url:"/issue/SetLabelForStandardResult",
@@ -386,7 +386,7 @@ function initSearchPage(currenPage){
         success: function (msg) {
             if (msg.status == "OK") {
                 listCount = msg.result;
-                console.log("查找到的条数为："+listCount);
+ //               console.log("查找到的条数为："+listCount);
                 $("#page").initPage(listCount,currenPage,labelInforSearch);
             } else {
                 alert(msg.result);
@@ -468,7 +468,7 @@ function addlabel(){
 		},
 		dataType:"json",
 		success: function(msg){
-			console.log(msg);
+//			console.log(msg);
 			if( msg.status == "OK"){
 				backLabelInfor();
 			}else{
@@ -505,7 +505,7 @@ function labelInforEdit(labelId,labelName){
 function labelInforChange(){
 	var newId=getCookie("labelid");
 
-	console.log($("#new_name_label").val());
+//	console.log($("#new_name_label").val());
 	$.ajax({
 		type:"post",
 		url:"/label/updateLabel",
@@ -515,7 +515,7 @@ function labelInforChange(){
 		},
 		dataType:"json",
 		success: function(msg){
-			console.log(msg);
+//			console.log(msg);
 			if( msg.status == "OK"){
 				alert("修改成功");
 				backLabelInfor();

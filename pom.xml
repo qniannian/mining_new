@@ -343,7 +343,7 @@
 		<dependency>
 			<groupId>com.hust</groupId>
 			<artifactId>summary</artifactId>
-			<version>0.01</version>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 	<build>

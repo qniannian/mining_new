@@ -11,7 +11,6 @@
  */
 function showClusterDetails(index,rid,count){
 	var url = '';
-	
 	$("#clusterItemAll").prop("checked",false);
 	$.ajax({
 		type : "post",

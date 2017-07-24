@@ -51,7 +51,7 @@ function conservationClick() {
 //聚类按钮点击事件
 function clussterClick() {
     var alg = $("input[name='algorithm']:checked").val();
-    console.log(alg+"**al");
+ //   console.log(alg+"**al");
     if(alg == 1){
         kmeans_cluster();
     }else if(alg == 2){
@@ -123,8 +123,8 @@ function showMining(){
 function kmeans_conservation(){
 	 var algorithm = $("input[name='algorithm']:checked").val();
      var granularity = $("#kmeans_granularity:checked").val();
-     console.log(algorithm+"**k");
-	 console.log(granularity+"**gr");
+ //    console.log(algorithm+"**k");
+//	 console.log(granularity+"**gr");
     //ajax 发送请求
 	 $.ajax({
 	    	type:"POST",
@@ -140,7 +140,8 @@ function kmeans_conservation(){
 	        		alert("设置成功！");
 					
 	        	}else{
-	        		console.log(msg.result);
+	        //		console.log(msg.result);
+	        		alert(msg.result);
 	        	}
 	        },
 			error: function(){
@@ -154,8 +155,8 @@ function kmeans_conservation(){
 function canopy_conservation() {
 	var algorithm = $("input[name='algorithm']:checked").val();
     var granularity = $("#canopy_granularity:checked").val();
-    console.log(algorithm+"**k");
-	 console.log(granularity+"**gr");
+ //   console.log(algorithm+"**k");
+//	 console.log(granularity+"**gr");
    //ajax 发送请求
 	 $.ajax({
 	    	type:"POST",
@@ -171,7 +172,8 @@ function canopy_conservation() {
 	        		alert("设置成功！");
 					
 	        	}else{
-	        		console.log(msg.result);
+	        	//	console.log(msg.result);
+	        		alert(msg.result);
 	        	}
 	        },
 			error: function(){
@@ -184,8 +186,8 @@ function canopy_conservation() {
 function dbscans_conservation() {
 	var algorithm = $("input[name='algorithm']:checked").val();
     var granularity = $("#dbscan_size:checked").val();
-    console.log(algorithm+"**k");
-	 console.log(granularity+"**gr");
+//    console.log(algorithm+"**k");
+//	 console.log(granularity+"**gr");
    //ajax 发送请求
 	 $.ajax({
 	    	type:"POST",
@@ -201,7 +203,8 @@ function dbscans_conservation() {
 	        		alert("设置成功！");
 					
 	        	}else{
-	        		console.log(msg.result);
+	        	//	console.log(msg.result);
+	        		alert(msg.result);
 	        	}
 	        },
 			error: function(){
@@ -214,8 +217,8 @@ function dbscans_conservation() {
 function kmeans_cluster(){
     var k_value = $("#k_value").val();
     var granularity = $("#kmeans_granularity:checked").val();
-    console.log(k_value+"**k");
-	console.log(granularity+"**gr");
+ //   console.log(k_value+"**k");
+//	console.log(granularity+"**gr");
     //ajax 发送请求
     $.ajax({
         type:"POST",
@@ -237,7 +240,7 @@ function kmeans_cluster(){
             }
         },
         complete : function(){
-            console.log("all")
+      //      console.log("all")
             stop();
         },
         error: function(){
@@ -249,8 +252,8 @@ function kmeans_cluster(){
 function canopy_cluster(){
     var Threshold = $("#Threshold").val();
     var granularity = $("#canopy_granularity:checked").val();
-    console.log("Threshold:"+Threshold);
-    console.log("granularity"+granularity);
+ //   console.log("Threshold:"+Threshold);
+ //   console.log("granularity"+granularity);
     //ajax 发送请求
     $.ajax({
         type:"post",
@@ -273,7 +276,7 @@ function canopy_cluster(){
             }
         },
         complete : function(){
-            console.log("all")
+    //        console.log("all")
             stop();
         },
         error: function(){
@@ -286,9 +289,9 @@ function dbscan_cluster(){
     var radius = $("#radius").val();
     var minNum = $("#minNum").val();
     var granularity = $("#dbscan_size:checked").val();
-    console.log("radius:"+radius);
-    console.log("minNum:"+minNum);
-    console.log("granularity:"+granularity);
+ //   console.log("radius:"+radius);
+ //   console.log("minNum:"+minNum);
+ //   console.log("granularity:"+granularity);
     //ajax 发送请求
     $.ajax({
         type:"post",
@@ -310,7 +313,7 @@ function dbscan_cluster(){
             }
         },
         complete : function(){
-            console.log("all")
+    //        console.log("all")
             stop();
         },
         error: function(){

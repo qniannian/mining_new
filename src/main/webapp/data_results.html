@@ -4,22 +4,22 @@
 <meta charset="UTF-8">
 <title>结果汇总</title>
 <script type="text/javascript" src="js/cookie.js"></script>
-<script type="text/javascript" src="js/data.js"></script>
 <script type="text/javascript" src="js/echarts.min.js"></script>
+<script type="text/javascript" src="js/data.js"></script>
 </head>
 <body>
 	<div class="s_nav">
 		当前位置： <a href="javascript:;" onclick="baseAjax('topic_list')">任务管理</a>
-		>> <a href="javascript:;" onclick="baseAjax('history')">结果查看</a>
+		>> <a href="javascript:;" onclick="baseAjax('standard_result')">结果查看</a>
 		>>统计结果
 	</div>
 
 	<div class="data_xq">
 		<ul class="data_xq_tit">
-			<li class="stop">分类统计</li>
-			<li>折线/柱状图</li>
-			<li>全局统计</li>
-			<li>饼图</li>
+			<li class="stop" onmouseover="mouseover(this)">分类统计</li>
+			<li onmouseover="mouseover(this)">折线/柱状图</li>
+			<li onmouseover="mouseover(this)">全局统计</li>
+			<li onmouseover="mouseover(this)">饼图</li>
 			<div class="clear"></div>
 		</ul>
 		<div class="data_xq_cont stop_zs">

@@ -107,9 +107,9 @@ public class IssueDao {
     public int deleteIssueById(String issueId, String user) {
         IssueExample example = new IssueExample();
         Criteria cri = example.createCriteria();
-        System.out.println("删除的数据为"+issueId);
+        //System.out.println("删除的数据为"+issueId);
         cri.andIssueIdEqualTo(issueId);
-        cri.andCreatorEqualTo(user);
+        //cri.andCreatorEqualTo(user);
         return issueMapper.deleteByExample(example);
     }
 }

@@ -31,76 +31,71 @@ import net.sf.json.JSONObject;
 @RequestMapping("/coreResult")
 public class CoreResultController {
 	private static final Logger logger = LoggerFactory.getLogger(CoreResultController.class);
-    @Autowired
-    private IssueService issueService;
-    @Autowired
-    private CoreResultService coreResultService;
-    @Autowired
-    private RedisService redisService;
-    
+	@Autowired
+	private IssueService issueService;
+	@Autowired
+	private CoreResultService coreResultService;
+	@Autowired
+	private RedisService redisService;
+
 	@ResponseBody
-    @RequestMapping(value = "/queryCoreResults")
-    public Object queryStandardResults(@RequestParam(value = "issueId", required = false) String issueId,
-            HttpServletRequest request){
-    	Issue issue = issueService.queryIssueById(issueId);
-    	if (issue == null) {
-            return ResultUtil.errorWithMsg("查询任务文件失败");
-        }
-    	List<CoreResult> coreResList = coreResultService.queryCoreRessByIssueId(issueId);
-    	redisService.setString(KEY.ISSUE_ID, issueId, request);
-    	JSONObject json = new JSONObject();
-        json.put("issue", issue);
-        json.put("coreResList", coreResList);
-        return ResultUtil.success(json);
-    }
-	
-    @ResponseBody
-    @RequestMapping(value = "/download", method = RequestMethod.POST)
-    public void download(@RequestParam(value = "coreResId", required = true) String coreResId,HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	String issueId = issueService.getCurrentIssueId(request);
-        if (StringUtils.isBlank(issueId)) {
-            response.sendError(404, "未找到当前处理事件，请先创建或者选择某一事件");
-            logger.error("issueId为空");
-            return;
-        }
-        CoreResult coreResult = coreResultService.queryCoreResById(coreResId);
-        if (null == coreResult) {
-            response.sendError(404, "未找到当前处理记录，请先创建或者选择某一记录");
-            logger.error("coreResult为空");
-            return;
-        }
-        OutputStream outputStream = null;
-        try {
-            outputStream = response.getOutputStream();
-            response.setCharacterEncoding("utf-8");
-            response.setContentType("multipart/form-data");
-            String coreResName = new String(coreResult.getResName().getBytes(),"ISO8859-1");
-            response.setHeader("Content-Disposition", "attachment;filename="+coreResName+".docx");
-            if(!coreResultService.export(coreResId, outputStream)){
-            	throw new Exception();
-            }
-        } catch (Exception e) {
-            logger.error("核心数据 导出失败\t" + e.toString());
-        } finally {
-            try {
-                outputStream.close();
-            } catch (Exception e) {
-                logger.error("导出核心数据时，关闭outputstream失败");
-                return;
-            }
-        }
-    }
-	
+	@RequestMapping(value = "/queryCoreResults")
+	public Object queryStandardResults(@RequestParam(value = "issueId", required = false) String issueId,
+			HttpServletRequest request) {
+		Issue issue = issueService.queryIssueById(issueId);
+		if (issue == null) {
+			return ResultUtil.errorWithMsg("查询任务文件失败");
+		}
+		List<CoreResult> coreResList = coreResultService.queryCoreRessByIssueId(issueId);
+		redisService.setString(KEY.ISSUE_ID, issueId, request);
+		JSONObject json = new JSONObject();
+		json.put("issue", issue);
+		json.put("coreResList", coreResList);
+		return ResultUtil.success(json);
+	}
+
 	@ResponseBody
-    @RequestMapping(value = "/delete")
-    public Object delete(@RequestParam(value = "coreResId", required = false) String coreResId,
-            HttpServletRequest request){
-    	String issueId = issueService.getCurrentIssueId(request);
-    	if(coreResultService.deleteById(coreResId) <= 0){
-    		return ResultUtil.errorWithMsg("删除失败！");
-    	}
-    	JSONObject json = new JSONObject();
-        json.put("issueId", issueId);
-        return ResultUtil.success(json);
-    }
+	@RequestMapping(value = "/download", method = RequestMethod.POST)
+	public void download(@RequestParam(value = "coreResId", required = true) String coreResId,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		CoreResult coreResult = coreResultService.queryCoreResById(coreResId);
+		if (null == coreResult) {
+			response.sendError(404, "请重新生成准数据。");
+			logger.error("coreResult为空");
+			return;
+		}
+		OutputStream outputStream = null;
+		try {
+			outputStream = response.getOutputStream();
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("multipart/form-data");
+			String coreResName = new String(coreResult.getResName().getBytes(), "ISO8859-1");
+			response.setHeader("Content-Disposition", "attachment;filename=" + coreResName + ".docx");
+			if (!coreResultService.export(coreResId, outputStream)) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			logger.error("结果数据 导出失败\t" + e.toString());
+		} finally {
+			try {
+				outputStream.close();
+			} catch (Exception e) {
+				logger.error("导出结果数据时，关闭outputstream失败");
+				return;
+			}
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/delete")
+	public Object delete(@RequestParam(value = "coreResId", required = false) String coreResId,
+			HttpServletRequest request) {
+		String issueId = issueService.getCurrentIssueId(request);
+		if (coreResultService.deleteById(coreResId) <= 0) {
+			return ResultUtil.errorWithMsg("删除失败！");
+		}
+		JSONObject json = new JSONObject();
+		json.put("issueId", issueId);
+		return ResultUtil.success(json);
+	}
 }

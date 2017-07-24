@@ -42,8 +42,8 @@ public class URLTool {
 				}
 			}
 		}
-		System.out.println("排序后-----");
-		System.out.println("网站url\t网站名称\t数量");
+		//System.out.println("排序后-----");
+		//System.out.println("网站url\t网站名称\t数量");
 		return sort(urlNumberMap,urlNameMap);
 	}
 
@@ -70,9 +70,9 @@ public class URLTool {
 		});
 		
 		for (Entry<String, Integer> entry : urls) {
-			System.out.println(String.format("%-50s", entry.getKey())+
-					String.format("%-25s", urlNameMap.get(entry.getKey()))+
-					String.format("%-5s", entry.getValue()));
+			//System.out.println(String.format("%-50s", entry.getKey())+
+			//		String.format("%-25s", urlNameMap.get(entry.getKey()))+
+			//		String.format("%-5s", entry.getValue()));
 			String[] string = new String[3];
 			string[0] = entry.getKey();
 			string[1] = urlNameMap.get(entry.getKey());

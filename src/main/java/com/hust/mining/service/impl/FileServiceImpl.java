@@ -95,5 +95,4 @@ public class FileServiceImpl implements FileService {
         // TODO Auto-generated method stub
         return fileDao.searchFilesByTime(issueId, start, end);
     }
-
 }

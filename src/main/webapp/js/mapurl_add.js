@@ -17,8 +17,8 @@ $(function() {
 	box = document.getElementById('drop_area'); // 拖拽区域
 	box.addEventListener("drop", function(e) {
 		e.preventDefault(); // 取消默认浏览器拖拽效果
-		console.log("before");
-		console.log(e.dataTransfer.files);
+//		console.log("before");
+//		console.log(e.dataTransfer.files);
 		var file = e.dataTransfer.files[0]; // 获取文件对象
 		if (file.name.lastIndexOf("xls") !== -1
 				|| file.name.lastIndexOf("xlsx") !== -1) {
@@ -36,19 +36,23 @@ $(function() {
 
 function submit(fd) {
 	$.ajax({
-		async : false,
 		crossDomain : true,
-		url : "/website/importMapUrl",
+		url : "/file/uploadDomainExcel",
 		method : "POST",
 		processData : false,
 		contentType : false,
 		dataType : "json",
 		mimeType : "multipart/form-data",
 		data : fd,
+		beforeSend : function() {
+			begin();
+			},
 		success : function(msg) {
 			alert(msg.result);
+			baseAjax("website_infor");
 		},
 		complete : function() {
+			stop();
 			box.innerHTML="将文件拖拽到此处";
 		},
 		error : function() {

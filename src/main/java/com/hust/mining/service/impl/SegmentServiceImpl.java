@@ -35,7 +35,7 @@ public class SegmentServiceImpl implements SegmentService {
     }
   
     public static void addStopwords(List<String> list){    	
-     	System.out.println("==============="+list.size());
+     	//System.out.println("==============="+list.size());
      	filter.insertStopWords(list);
      	logger.info("=====================添加停用词成功==========================");
     }
@@ -60,7 +60,8 @@ public class SegmentServiceImpl implements SegmentService {
             res = NlpAnalysis.parse(str).recognition(filter);
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            System.out.println(e.toString() + "\t" + str);
+        	logger.info(e.toString() + "\t" + str);
+            //System.out.println(e.toString() + "\t" + str);
             return new String[] { "失败" };
         }
         String[] words = new String[res.size()];

@@ -37,13 +37,13 @@ public class LabelDao {
 		Criteria criteria = example.createCriteria();
 		if (!StringUtils.isBlank(name)) 
 		{
-			System.out.println("进入selectLabelCount方法");
-			System.out.println("待查找的是"+name);
+			//System.out.println("进入selectLabelCount方法");
+			//System.out.println("待查找的是"+name);
 			criteria.andLabelnameLike("%"+name+"%");
 		}
 		example.setStart(0);
         example.setLimit(0);
-        System.out.println("相似的条数为："+labelmapper.countByExample(example));
+        //System.out.println("相似的条数为："+labelmapper.countByExample(example));
 		return labelmapper.countByExample(example);
 	}
 	

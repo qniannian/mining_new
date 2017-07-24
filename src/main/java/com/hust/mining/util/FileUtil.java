@@ -52,6 +52,40 @@ public class FileUtil {
 		pool.shutdown();
 		return content;
 	}
+	//读取带空行的数据，被空行隔开的数据分别存到list里
+	public static List<List<String[]>> readwithNullRow(String filename) throws Exception {
+		List<List<String[]>> docs = new ArrayList<>();
+		List<String[]> doc = new ArrayList<>();
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+		synchronized (br) {
+			String line;
+			while (true) {
+				line = br.readLine();
+				if (StringUtils.isEmpty(line) || CommonUtil.isEmptyArray(line.split("\t"))) {
+					String nextline = br.readLine();
+					//判断是否为空行
+					if(StringUtils.isEmpty(nextline) || CommonUtil.isEmptyArray(nextline.split("\t"))){
+//						doc.add(line.split("\t"));
+						if(!doc.isEmpty()){
+							docs.add(doc);
+						}
+						break;
+					}else{
+						docs.add(doc);	
+						doc = new ArrayList<>();
+						doc.add(nextline.split("\t"));
+						//docs.add(doc);						
+					}
+					
+				}else{
+					String[] row = line.split("\t");
+					doc.add(row);
+				}
+			}
+		}
+		br.close();
+		return docs;
+	}
 
 	// 不同文件第一行属性不同，作并集处理
 	@SuppressWarnings("unchecked")
@@ -281,6 +315,37 @@ public class FileUtil {
 			return content;
 		}
 	}
+//	class ReadwithNullRowThread implements Callable<List<String[]>> {
+//
+//		private String filename;
+//
+//		protected ReadwithNullRowThread(String filename) {
+//			super();
+//			this.filename = filename;
+//		}
+//
+//		@Override
+//		public List<String[]> call() throws Exception {
+//			BufferedReader br = new BufferedReader(new FileReader(filename));
+//			List<String[]> content = new ArrayList<String[]>();
+//			synchronized (br) {
+//				String line;
+//				while (true) {
+//					line = br.readLine();
+//					if (StringUtils.isEmpty(line)) {
+//						if(StringUtils.isEmpty(br.readLine())){
+//							break;
+//						}
+//						
+//					}
+//					String[] row = line.split("\t");
+//					content.add(row);
+//				}
+//			}
+//			br.close();
+//			return content;
+//		}
+//	}
 
 	class WriteThread implements Callable<Boolean> {
 		private String filename;

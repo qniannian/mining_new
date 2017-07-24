@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class Constant {
 
     private void init() {
-        DIRECTORY.init(dirFile, dirOrigCluster, dirOrigCount, dirModiCluster, dirModiCount, dirContent, dirStdResCluster, dirStdResCount, dirCoreRes);
+        DIRECTORY.init(dirFile, dirOrigCluster, dirOrigCount, dirModiCluster, dirModiCount, dirContent, dirStdResCluster, dirStdResCount,dirStdResContent, dirCoreRes);
     }
 
     public final static String INVALID_TIME = "1970-01-01";
@@ -45,7 +45,10 @@ public class Constant {
     public static class KEY {
         public final static String SESSION_ID = "JSESSIONID";
         public final static String ISSUE_ID = "issueId";
+        public final static String STANDARD_ISSUE_ID = "stdIssueId";
         public final static String RESULT_ID = "resultId";
+		public static final String STD_RESULT_ID = "stdResId";
+		public static final String STD_RESULT_CONTENT = "std_res_content";
         public static final String USER_NAME = "username";
         public static final String REDIS_CLUSTER_RESULT = "redis_cluster_result";
         public static final String REDIS_COUNT_RESULT = "redis_count_result";
@@ -63,6 +66,20 @@ public class Constant {
         public static final int REPLY_INDEX = 4;
         public static final int COUNT_ITEM_INDEX = 0;
         public static final int COUNT_ITEM_AMOUNT = 1;
+    }
+    /**
+     * 域名文件的基本属性列下标
+     * @author Jack
+     *
+     */
+    public static class DomainExcelAttr{
+    	public static final int URL_INDEX = 0;
+    	public static final int NAME_INDEX = 1;
+    	public static final int COLUMN_INDEX = 2;
+    	public static final int TYPE_INDEX = 3;
+    	public static final int RANK_INDEX = 4;
+    	public static final int INCIDENCE_INDEX = 5;
+    	public static final int WEIGHT_INDEX = 6;
     }
 
     // 情感
@@ -153,6 +170,8 @@ public class Constant {
     private String dirStdResCluster;
     @Value("${standard_count}")
     private String dirStdResCount;
+    @Value("${standard_content}")
+    private String dirStdResContent;
     @Value("${coreRes}")
     private String dirCoreRes;
     
@@ -196,13 +215,17 @@ public class Constant {
         public static String STDRES_CLUSTER;
         public static String STDRES_COUNT;
         /**
+         * 生成的准数据内容
+         */
+        public static String STDRES_CONTENT;
+        /**
          * 核心数据的存储结果
          * 标题index  （tab）  类数量
          */
         public static String CORERES;
         
         public static void init(String dirFile, String dirOrigCluster, String dirOrigCount, String dirModiCluster,
-                String dirModiCount, String dirContent, String dirStdResCluster, String dirStdResCount, String dirCoreRes) {
+                String dirModiCount, String dirContent, String dirStdResCluster, String dirStdResCount, String dirStdResContent, String dirCoreRes) {
             FILE = dirFile;
             ORIG_CLUSTER = dirOrigCluster;
             ORIG_COUNT = dirOrigCount;
@@ -211,6 +234,7 @@ public class Constant {
             CONTENT = dirContent;
             STDRES_CLUSTER = dirStdResCluster;
             STDRES_COUNT = dirStdResCount;
+            STDRES_CONTENT = dirStdResContent;
             CORERES = dirCoreRes;
         }
     }

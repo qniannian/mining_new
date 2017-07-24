@@ -1,12 +1,18 @@
 function addWebsite() {
+	weight = $("#weight").val();
+	if(weight == "" || weight==undefined)
+		weight = "0";
 	$.ajax({
 		type : "post",
-		url : "/website/insertWebsite",
+		url : "/domain/addDomain",
 		data : {
-			url : $("#urlWebsite").val(),
-			name : $("#nameWibsite").val(),
-			levle : $("#levelWebsite").val(),
-			type : $("#typeWebsite").val()
+			url : $("#url").val(),
+			name : $("#name").val(),
+			column : $("#column").val(),
+            type : $("#type").val(),
+			rank : $("#rank").val(),
+            incidence : $("#incidence").val(),
+            weight : parseInt(weight)
 		},
 		dataType : "json",
 		success : function(msg) {
@@ -58,17 +64,17 @@ function websiteInforChange() {
 }
 
 function clearNewWebsite() {
-	$("#new_url_website").val('');
+//	$("#new_url_website").val('');
 	$("#new_name_website").val('');
 	$("#new_level_website").val('');
 	$("#new_type_website").val('');
 }
 
-function test(){
+/*function test(){
 	console.log("webSiteName="+getCookie("websiteName"));
 	console.log("webSiteUrl="+getCookie("url"));
 }
-test();
+test();*/
 
 function getCookie(name) {
 	var arr = document.cookie.match(new RegExp("(^|)" + name + "=([^;]*)(;|$)"));

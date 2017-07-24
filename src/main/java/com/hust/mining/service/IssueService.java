@@ -20,9 +20,13 @@ public interface IssueService {
     int createIssue(String issueName, String issueType, HttpServletRequest request);
    
     int createIssueWithLink(String linkedIssueId, String issueType, String stdResId, HttpServletRequest request);
+   
+    String createCoreIssue(String linkedIssueId, String stdResId, HttpServletRequest request);
 
     int deleteIssueById(String issueId,String issueType,HttpServletRequest request);
 
+    int deleteIssueAllById(String issueId, HttpServletRequest request);
+    
     String getCurrentIssueId(HttpServletRequest request);
 
     List<Issue> queryIssue(IssueQueryCondition con);

@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
         userRoleDao.deleteUserRoleByUserId(user.getUserId());
         List<Integer> roleIds = new ArrayList<Integer>();
         for (String roleNameInfo : roleName) {
-            System.out.println(roleName);
+            //System.out.println(roleName);
             List<Role> role = roleDao.selectRoleByName(roleNameInfo);
             roleIds.add(role.get(0).getRoleId());
         }
@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
         for (UserRole userRoleInfo : userRole) {
             roleId.add(userRoleInfo.getRoleId());
         }
-        System.out.println("用户有几个角色：" + roleId.size());
+        //System.out.println("用户有几个角色：" + roleId.size());
         // 现在得到roleId了，roleId有很多 ，不止一个
         // 也可以先把第一个元素添加进去，然后循环其他的元素，假如roleId>1说明具有很多角色，首先把第一个角色权限信息写进入，然后再循环其他元素假如到的的信息和1不同则添加进去
         // 首先要判断用户到底有几个角色把

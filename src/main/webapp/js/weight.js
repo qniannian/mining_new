@@ -242,8 +242,8 @@ function updateNowPage(page){
 
 // 信息搜索
 function weightInforSearch(page){
-	console.log($("#name").val());
-	console.log($("#weight").val());
+//	console.log($("#name").val());
+//	console.log($("#weight").val());
 	search_click=true;
 	$.ajax({
 		type:"post",
@@ -296,7 +296,7 @@ function addWeight(){
 		},
 		dataType:"json",
 		success: function(msg){
-			console.log(msg);
+//			console.log(msg);
 			if( msg.status == "OK"){
 				baseAjax("weight_infor");
 			}else{

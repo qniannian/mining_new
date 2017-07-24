@@ -130,7 +130,7 @@ public class RoleServiceImpl implements RoleService {
 		//查找权限名对应的权限ID集合
 		if (!powerName.isEmpty()) {
 			for (String powerNameInfo : powerName) {
-				System.out.println(powerNameInfo);
+				//System.out.println(powerNameInfo);
 				List<Power> powers = powerDao.selectPowerByPowerName(powerNameInfo);
 				if(powers.isEmpty()){
 					continue;

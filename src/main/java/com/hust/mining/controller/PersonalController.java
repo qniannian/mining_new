@@ -48,13 +48,13 @@ public class PersonalController {
 	@ResponseBody
     @RequestMapping(value = "/getPersonalInfo", method = RequestMethod.GET)
     public Object getCurrentUser(HttpServletRequest request) {
-		System.out.println("getCurrentUserInfo");
+		//System.out.println("getCurrentUserInfo");
         String username = userService.getCurrentUser(request);
         List<User> users = userService.selectSingleUserInfo(username, request);
         if (null == users || users.size() == 0) {
             return ResultUtil.errorWithMsg("sorry! user is not exist");
         }
-        System.out.println(users.get(0).getTrueName());
+        //System.out.println(users.get(0).getTrueName());
         return ResultUtil.success(users.get(0));
     }
 	

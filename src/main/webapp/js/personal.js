@@ -12,7 +12,7 @@ function setCookie(value1){
 	document.cookie = cookie_name1 +"="+ escape (value1) + ";expires=" + exp.toGMTString();
 }
 function getCookie(name) {
-	console.log(document.cookie);
+//	console.log(document.cookie);
 	var arr =document.cookie.match(new RegExp("(^|)"+name+"=([^;]*)(;|$)"));
 	if(arr !=null) 
 		return unescape(arr[2]); 
@@ -47,10 +47,7 @@ function personalInforShow(){
 personalInforShow();
 //置空个人信息
 function clearChangeInfor(){
-	//$("#new_userName").val('');
-	$("#new_trueName").val('');
-	$("#new_telphone").val('');
-	$("#new_email").val('');
+	baseAjax('personal_infor');
 }
 //个人信息修改
 function personalInforChange(){
@@ -79,10 +76,10 @@ function personalInforChange(){
 		},
 		dataType:"json",
 		success: function(msg){
-			console.log(msg);
+//			console.log(msg);
 			if( msg.status == "OK"){
 				alert(msg.result);
-				baseAjax("personal_infor");
+				baseAjax("topic_list");
 			}else{
 				alert(msg.result);
 			}
@@ -123,10 +120,10 @@ function passwordChange(){
 			newpass:newPass
 		},
 		success: function(msg){
-			console.log(msg);
+//			console.log(msg);
 			if( msg.status == "OK"){
 				alert("密码更改成功！");
-				baseAjax("password_change");
+				baseAjax("topic_list");
 			}else{
 				alert(msg.result);
 			}

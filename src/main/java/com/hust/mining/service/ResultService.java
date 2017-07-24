@@ -35,4 +35,6 @@ public interface ResultService {
 	public boolean deleteClusterItems(String clusterIndex, int[] sets, HttpServletRequest request);
 
 	public boolean resetCluster(String index, HttpServletRequest request);
+
+	public List<Integer> getMarked(List<String[]> cluster);
 }

@@ -94,8 +94,8 @@ public class LabelServiceImpl implements LabelService {
 		}
 		//判断更新是否成果
 		int status = labeldao.updateByPrimaryKeySelective(label);
-		System.out.println("要修改的ID是"+label.getLabelid());
-		System.out.println("要修改的name是"+label.getLabelname());
+		//System.out.println("要修改的ID是"+label.getLabelid());
+		//System.out.println("要修改的name是"+label.getLabelname());
 		if (status==0) {
 			logger.info("更新标签失败");
 			return false;

@@ -166,7 +166,7 @@ public class WebsiteController {
 			return ResultUtil.errorWithMsg("file is empty");
 		}
 		try {
-			System.out.println(file.getOriginalFilename());
+			//System.out.println(file.getOriginalFilename());
 			List<String[]> list = ExcelUtil.read(file.getOriginalFilename(), file.getInputStream(), 1);
 			if (null == list || 0 == list.size()) {
 				return ResultUtil.errorWithMsg("file is uncorrect!");

@@ -46,7 +46,7 @@
 				<tr>
 					<td width="100" height="50">角色：</td>
 					<td width="200" height="50"><select id="select_roleName" class="form-control">
-							<option selected="true">请选择角色</option>
+							<option>请选择角色</option>
 					</select></td>
 					<!--<td width="200" height="50"><input type="text" id="roleName"  /></td>-->
 					<td width="160" height="50"></td>
@@ -81,11 +81,22 @@
 				success : function(msg) {
 					if (msg.status == "OK") {
 						var items = msg.result;
-						console.log(msg);
+						
 						$.each(items, function(idx, item) {
-							row = '<option>' + item.roleName + '</option>';
-							$('#select_roleName').append(row);
+							if(item.roleName == '超级管理员'){
+								;
+							}else if(item.roleName != '管理员'){
+								row = '<option selected="true">' + item.roleName + '</option>';
+								$('#select_roleName').append(row);
+							} else {
+								row = '<option>' + item.roleName + '</option>';
+								$('#select_roleName').append(row);
+							}
 						});
+						if($('#select_roleName option').size() == 0){
+							alert("还没有创建角色");
+							return;
+						}
 					} else {
 						alert(msg.result);
 					}
@@ -95,7 +106,7 @@
 					stop();
 				},
 				error : function(msg) {
-					alert(msg.result);
+					alert(eval('(' + msg.responseText + ')').result);
 				}
 			})
 		}

@@ -11,7 +11,9 @@ $(document).ready(function() {
 })
 
 function creatInt() {
-	var issueType = $("input[name='issueType']:checked").val();
+//	var issueType = $("input[name='issueType']:checked").val();
+	//默认创建原始数据任务
+	var issueType = "extensive";
 	setCookie(issueType);
 	var title = $("#chuangjian").val().replace(" ", "");
 	if (title === undefined || title == '') {

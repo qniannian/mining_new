@@ -2,11 +2,13 @@ package com.hust.mining.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.hust.mining.model.StandardResult;
 import com.hust.mining.model.params.StandardResultQueryCondition;
+import com.hust.mining.model.params.StatisticParams;
 
 public interface StandardResultService {
 	int insert(StandardResultQueryCondition con, HttpServletRequest request);
@@ -28,4 +30,10 @@ public interface StandardResultService {
     String getDateCount(List<String[]> cluster);
     
     String getSourceCount(List<String[]> cluster);
+
+	String createStandResult(List<String[]> list, HttpServletRequest request);
+
+	List<String[]> getCountResultById(String resultId, HttpServletRequest request);
+
+	Map<String, Object> statistic(String stdResId, StatisticParams params, HttpServletRequest request);
 }

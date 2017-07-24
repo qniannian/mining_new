@@ -22,8 +22,8 @@ function algorithm_submit(){
 		}
 	}
     //ajax异步提交请求
-	console.log(algorithm+"**al");
-	console.log(granularity+"**gr");
+//	console.log(algorithm+"**al");
+//	console.log(granularity+"**gr");
     $.ajax({
     	type:"POST",
     	url:"/user/setAlgorithmAndGranularity",
@@ -38,7 +38,8 @@ function algorithm_submit(){
         		alert("修改成功！");
 				
         	}else{
-        		console.log(msg.result);
+   //     		console.log(msg.result);
+        		alert(msg.result);
         	}
         },
 		error: function(){
@@ -60,7 +61,7 @@ function algorithm_Show(){
         url:"/user/getAlgorithmAndGranularity",
         dataType:"json",
         success:function(msg){
-            console.log(msg);
+   //         console.log(msg);
             if(msg.status=="OK"){
 				var items = msg.result.user;
 				var al = msg.result.algorithm;

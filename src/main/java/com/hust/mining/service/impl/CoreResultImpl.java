@@ -34,6 +34,27 @@ public class CoreResultImpl implements CoreResultService {
 		coreResult.setCreator(userService.getCurrentUser(request));
 		return coreResultDao.insert(con, coreResult);
 	}
+	
+	@Override
+	public String insertCore(CoreResultQueryCondition con,String contentName,HttpServletRequest request) {
+		CoreResult coreResult = new CoreResult();
+		coreResult.setCoreRid(UUID.randomUUID().toString());
+		coreResult.setIssueId(con.getIssueId());
+		coreResult.setResName(con.getCoreResName());
+		coreResult.setCreateTime(new Date());
+		coreResult.setCreator(userService.getCurrentUser(request));
+		coreResultDao.insertCore(con, contentName, coreResult);
+		return coreResult.getCoreRid();
+	}
+	
+	@Override
+	public int update(CoreResultQueryCondition con, HttpServletRequest request){
+		CoreResult coreResult = new CoreResult();
+		coreResult.setIssueId(con.getIssueId());
+		coreResult.setCreateTime(new Date());
+		coreResult.setCreator(userService.getCurrentUser(request));
+		return coreResultDao.update(coreResult);
+	}
 
 	@Override
 	public int deleteById(String coreResId) {

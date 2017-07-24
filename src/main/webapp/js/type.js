@@ -239,7 +239,7 @@ function updateNowPage(page){
 // 信息搜索
 function typeInforSearch(page){
 	search_click=true;
-	console.log($("#type_search").val());
+//	console.log($("#type_search").val());
 	$.ajax({
 		type:"post",
 		url:"/sourceType/selectSourceTypeByName",
@@ -255,7 +255,7 @@ function typeInforSearch(page){
 				var items = msg.result ;
 				var cookie_value1;
 				var cookie_value2;
-				console.log(items);
+//				console.log(items);
 				var cookie_name="'typeName'";
 				$.each(items,function(idx,item) {
 					cookie_value1="'"+item.id+"'";
@@ -292,7 +292,7 @@ function AddtypeInfor(){
 		},
 		dataType:"json",
 		success: function(msg){
-			console.log(msg);
+//			console.log(msg);
 			if( msg.status == "OK"){
 				baseAjax("type_infor");
 			}else{
@@ -314,7 +314,7 @@ function clearType(){
 // 用户编辑
 function getCookie(name) {
 	
-	console.log(document.cookie);
+//	console.log(document.cookie);
 	var arr =document.cookie.match(new RegExp("(^|)"+name+"=([^;]*)(;|$)"));
 	if(arr !=null) 
 		return unescape(arr[2]); 
@@ -337,7 +337,7 @@ function ChangetypeInfor(){
 		},
 		dataType:"json",
 		success: function(msg){
-			console.log(msg);
+//			console.log(msg);
 			if( msg.status == "OK"){
 				alert("修改成功");	
 				baseAjax("type_infor");
@@ -370,7 +370,7 @@ $(function(){
 				dataType:"json",
 				success:function(msg){
 					// alert("lll");
-					console.log(msg);
+//					console.log(msg);
 					if(msg.status=="OK"){
 						baseAjax("type_infor");
 					}else{

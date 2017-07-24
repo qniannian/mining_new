@@ -38,7 +38,7 @@ public class URL {
 			
 			for (String hs : hashMap.keySet()) {
 				
-				System.out.println(hs+":"+hashMap.get(hs));
+				//System.out.println(hs+":"+hashMap.get(hs));
 				
 			}
 		} catch (IOException e) {

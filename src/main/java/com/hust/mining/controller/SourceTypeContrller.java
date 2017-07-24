@@ -52,7 +52,7 @@ public class SourceTypeContrller {
 	public Object selectSourceTypeByName(@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "start", required = true) int start,
 			@RequestParam(value = "limit", required = true) int limit) {
-		System.out.println(name);
+		//System.out.println(name);
 		SourceTypeQueryCondition sourceType = new SourceTypeQueryCondition();
 		sourceType.setName(name);
 		sourceType.setStart(start);

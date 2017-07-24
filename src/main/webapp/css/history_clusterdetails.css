@@ -13,7 +13,7 @@ a,img{border:0;}
 }
 #goodcover {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0%;
 	left:0%;
 	width: 100%;
@@ -23,9 +23,6 @@ a,img{border:0;}
 	-moz-opacity: 0.5;
 	opacity: 0.50;
 	filter: alpha(opacity=50);
-	_position: absolute;
- 	_top: expression_r(document . documentElement . clientHeight +   document .
-  documentElement . scrollTop -   this . offsetHeight);
 }
 #code {
 	width: 820px;

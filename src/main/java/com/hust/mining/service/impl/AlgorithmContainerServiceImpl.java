@@ -142,14 +142,14 @@ public class AlgorithmContainerServiceImpl implements AlgorithmContainerService 
             List<String[]> content =  (List<String[]>)redisService.getObject(KEY.REDIS_CONTENT, request);
             List<int[]> count = (List<int[]>) redisService.getObject(KEY.REDIS_COUNT_RESULT, request);
             List<String[]> cluster = (List<String[]>) redisService.getObject(KEY.REDIS_CLUSTER_RESULT, request);
-            System.out.println("cluster为:");
+            //System.out.println("cluster为:");
             for (String[] strings : cluster) {
 			   for (String string : strings) {
-				System.out.print(string+ "  ");
+				//System.out.print(string+ "  ");
 			}
-			   System.out.println();
+			   //System.out.println();
            }
-            System.out.println("cluster完:");
+            //System.out.println("cluster完:");
             for (int[] item : count) {
                 String[] old = content.get(item[Index.COUNT_ITEM_INDEX]+1);
                 String[] ne = new String[old.length + 1];
@@ -241,18 +241,18 @@ public class AlgorithmContainerServiceImpl implements AlgorithmContainerService 
     	int indexOfTime = AttrUtil.findIndexOfTime(attrs);
     	//向量转换完成
         List<double[]> vectors = Converter(list, 1);
-        System.out.println("使用的是KMEANS");
+        //System.out.println("使用的是KMEANS");
         KMeans kmeans = new KMeans();
         kmeans.setVectors(vectors);
         kmeans.setIterationTimes(20);
         //相似度方式的选择
         if (granularity == GRANULARITY.AcrossSimilarity) {
         kmeans.setSimi(new AcrossSimilarity(vectors)); 
-      	  System.out.println("选择的是粗粒度AcrossSimilarity");
+      	  //System.out.println("选择的是粗粒度AcrossSimilarity");
 		
         }if(granularity == GRANULARITY.CosSimilarity){
        	  kmeans.setSimi(new CosSimilarity(vectors));
-		  System.out.println("选择的是细粒度CosSimilarity");
+		  //System.out.println("选择的是细粒度CosSimilarity");
         }
         kmeans.setK(k);
         ExecutorService exec = Executors.newSingleThreadExecutor();
@@ -266,14 +266,14 @@ public class AlgorithmContainerServiceImpl implements AlgorithmContainerService 
         }
         
        List<List<Integer>> result= Sort(list, resultIndexSetList,indexOfTitle,indexOfTime);
-       System.out.println("去掉前");
+       //System.out.println("去掉前");
        for(int i = 0; i < result.size();i++)
        {
      	  List<Integer> list2 = result.get(i);
      	  for (Integer integer : list2) {
- 			System.out.print(integer+"  ");
+ 			//System.out.print(integer+"  ");
  		} 
-     	  System.out.println();
+     	  //System.out.println();
        }
       //去除长度为0 的类簇
       int start = 0;
@@ -301,14 +301,14 @@ public class AlgorithmContainerServiceImpl implements AlgorithmContainerService 
   		  
   	  }
   	  
-      System.out.println("去掉后");
+      //System.out.println("去掉后");
       for(int i = 0; i < result1.size();i++)
       {
     	  List<Integer> list2 = result1.get(i);
     	  for (Integer integer : list2) {
-			System.out.print(integer+"  ");
+			//System.out.print(integer+"  ");
 		} 
-    	  System.out.println();
+    	  //System.out.println();
       }
       return "聚类成功";
 	}
@@ -327,17 +327,17 @@ public class AlgorithmContainerServiceImpl implements AlgorithmContainerService 
     	int indexOfTime = AttrUtil.findIndexOfTime(attrs);
     	//向量转换完成
         List<double[]> vectors = Converter(list, 1);
-        System.out.println("使用的是CANOPY");
+        //System.out.println("使用的是CANOPY");
    	    Canopy canopy = new Canopy();
         canopy.setVectors(vectors);
         //相似度方式的选择
         if (granularity == GRANULARITY.AcrossSimilarity) {
       	  canopy.setSimi(new AcrossSimilarity(vectors)); 
-      	  System.out.println("选择的是粗粒度AcrossSimilarity");
+      	  //System.out.println("选择的是粗粒度AcrossSimilarity");
 			
         } else if(granularity == GRANULARITY.CosSimilarity){
 			  canopy.setSimi(new CosSimilarity(vectors));
-			  System.out.println("选择的是细粒度CosSimilarity");
+			  //System.out.println("选择的是细粒度CosSimilarity");
         }
         //设置阀值
         canopy.setThreshold(Threshold);
@@ -352,7 +352,7 @@ public class AlgorithmContainerServiceImpl implements AlgorithmContainerService 
             return "聚类失败";
         }
         List<List<Integer>> result= Sort(list, resultIndexSetList,indexOfTitle,indexOfTime);
-        System.out.println("result:");
+        //System.out.println("result:");
         storeResult(list, result, attrs, request);
         return "聚类成功";
 	}
@@ -376,16 +376,16 @@ public class AlgorithmContainerServiceImpl implements AlgorithmContainerService 
     	int indexOfTime = AttrUtil.findIndexOfTime(attrs);
     	//向量转换完成
         List<double[]> vectors = Converter(list, 1);
-        System.out.println("使用的是DBSCAN");
+        //System.out.println("使用的是DBSCAN");
    	    DBScan dbscan = new DBScan();
    	    dbscan.setVectors(vectors);
         if (granularity == GRANULARITY.AcrossSimilarity) {
        	  dbscan.setSimi(new AcrossSimilarity(vectors)); 
-         	  System.out.println("选择的是粗粒度AcrossSimilarity");
+         	  //System.out.println("选择的是粗粒度AcrossSimilarity");
  			
            } else if(granularity == GRANULARITY.CosSimilarity){
              dbscan.setSimi(new CosSimilarity(vectors));
- 			  System.out.println("选择的是细粒度CosSimilarity");
+ 			  //System.out.println("选择的是细粒度CosSimilarity");
            }
         //设置阀值
         dbscan.setMinPts(MinPts);

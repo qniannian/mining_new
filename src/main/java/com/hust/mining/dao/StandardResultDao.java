@@ -61,6 +61,10 @@ public class StandardResultDao {
 		return standardResultMapper.insert(standardResult);
 	}
 
+	public int insert(StandardResult standardResult) {		
+		return standardResultMapper.insert(standardResult);
+	}
+	
 	public int deleteById(String stdResId) {
 		if (!FileUtil.delete(DIRECTORY.STDRES_CLUSTER + stdResId)
 				|| !FileUtil.delete(DIRECTORY.STDRES_COUNT + stdResId)) {

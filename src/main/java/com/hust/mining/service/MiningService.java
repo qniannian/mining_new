@@ -20,4 +20,6 @@ public interface MiningService {
     public Map<String, Object> getAmount(Map<String, Map<String, Map<String, Integer>>> map);
 
     public Map<String, Integer> calAttention(Map<String, Integer> map);
+
+	public Map<String, Map<String, Map<String, Integer>>> statisticStdRes(List<String[]> content, int interval);
 }

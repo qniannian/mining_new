@@ -28,7 +28,7 @@ function addStopword() {
 	/**
 	 * 
 	 */
-	console.log("111122"+getWords());
+//	console.log("111122"+getWords());
 	$.ajax({
 		type : "post",
 		url : "/stopword/insertStopwords",
@@ -38,7 +38,7 @@ function addStopword() {
 		dataType : "json",
         traditional:true,
 		success : function(msg) {
-			console.log(msg);
+//			console.log(msg);
 			if (msg.status == "OK") {
 				baseAjax("stopword_infor");
 			} else {
@@ -57,7 +57,7 @@ function getWords(){
 	$("input[name='stopword']").each(function(index,element){
 		words.push($(this).val());
 	});
-	console.log(words);
+//	console.log(words);
 	return words;
 }
 
@@ -107,11 +107,11 @@ $(function() {
 					mimeType : "multipart/form-data",
 					data : fd,
 					success : function(msg) {
-						console.log(":"+msg.status)
+//						console.log(":"+msg.status)
 						if (msg.status == "OK") {
 							//判断上一个停用词表格是否为空若为空则删除
 							while(1){
-							console.log($('#addStopword').prev().find("input").val());
+//							console.log($('#addStopword').prev().find("input").val());
 							if($('#addStopword').prev().find("input").val()==""){
 								delStopwordInfor();
 							}else{

@@ -55,7 +55,7 @@ public class ResultController {
         if (StringUtils.isBlank(resultId)) {
             return ResultUtil.errorWithMsg("不存在记录");
         }
-        System.out.println(resultId+"--REusltc-"+issueId);
+        //System.out.println(resultId+"--REusltc-"+issueId);
         List<String[]> list = resultService.getCountResultById(resultId, issueId, request);
 
         if (null == list || list.size() == 0) {
@@ -127,9 +127,9 @@ public class ResultController {
     		@RequestParam(value = "ItemIdSets", required = false) int[] sets, HttpServletRequest request) {
     	
     	for(int i : sets){
-    		System.out.print(i+ " ");
+    		//System.out.print(i+ " ");
     	}
-    	System.out.println("sets:----");
+    	//System.out.println("sets:----");
     	if(clusterIndex == null || Integer.valueOf(clusterIndex) < 0 || sets == null){
     		return ResultUtil.errorWithMsg("对不起，删除失败！");
     	}

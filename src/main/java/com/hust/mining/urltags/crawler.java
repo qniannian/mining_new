@@ -33,7 +33,7 @@ public class crawler {
 	         	if(null != str){
 	         		list.add(str); 
 	         	} 
-	 			System.out.println(element.text());
+	 			//System.out.println(element.text());
 	 		}
 		} catch (IOException e) {
 			return null;
@@ -65,7 +65,7 @@ public class crawler {
 	 	        	if(null != str){
 	 	        		list.add(str); 
 	 	        	} 
-					System.out.println(string);
+					//System.out.println(string);
 	 			}
 			}
 				
@@ -96,7 +96,7 @@ public class crawler {
 	        	if(null != str){
 	        		list.add(str); 
 	        	} 
-				System.out.println(element.text());
+				//System.out.println(element.text());
 			}
 		} catch (IOException e) {
 			return null;
@@ -125,7 +125,7 @@ public class crawler {
 	        	if(null != str){
 	        		list.add(str); 
 	        	}
-				System.out.println(element.text());
+				//System.out.println(element.text());
 			}
 		} catch (IOException e) {
 			return null;

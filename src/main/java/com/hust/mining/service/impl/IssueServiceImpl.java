@@ -22,6 +22,7 @@ import org.apache.tools.ant.types.resources.selectors.Compare;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.druid.sql.visitor.functions.If;
 import com.hust.mining.constant.Constant;
 import com.hust.mining.constant.Constant.CONVERTERTYPE;
 import com.hust.mining.constant.Constant.DIRECTORY;
@@ -90,7 +91,7 @@ public class IssueServiceImpl implements IssueService {
 		if (insert > 0) {
 			redisService.setString(KEY.ISSUE_ID, issue.getIssueId(), request);
 		}
-		System.out.println(insert);
+		// System.out.println(insert);
 		return insert;
 	}
 
@@ -138,6 +139,70 @@ public class IssueServiceImpl implements IssueService {
 			return insertStdRes(issue, request);
 		} else {
 			return insertCoreRes(issue, stdResId, request);
+		}
+	}
+
+	@Override
+	public String createCoreIssue(String linkedIssueId, String stdResId, HttpServletRequest request) {
+		Issue linkedIssue = this.queryIssueById(linkedIssueId);
+		String issueName = linkedIssue.getIssueName().replace(Constant.ISSUE_STANDARD, Constant.ISSUE_CORE);
+		Issue issue = null;
+		if (StringUtils.isBlank(linkedIssue.getIssueHold())) {
+			String user = userService.getCurrentUser(request);
+			issue = new Issue();
+			issue.setIssueId(UUID.randomUUID().toString());
+			issue.setIssueName(issueName);
+			issue.setIssueType(Constant.ISSUETYPE_CORE);
+			issue.setIssueBelongTo(linkedIssueId);
+			issue.setCreator(user);
+			issue.setCreateTime(new Date());
+			issue.setLastOperator(user);
+			issue.setLastUpdateTime(issue.getCreateTime());
+			issueDao.insert(issue);
+			// 更新linkedIssue信息：添加IssueHold
+			linkedIssue.setIssueHold(issue.getIssueId());
+			// 不更新对应泛数据的last operate time。如果需要，则改为 issueService.
+			issueDao.updateIssueInfo(linkedIssue);
+		} else {
+			issue = queryIssueById(linkedIssue.getIssueHold());
+			// 主要为了更新插入新的standardResult此时的issue last operate time。
+			this.updateIssueInfo(issue, request);
+		}
+
+		return insertCore(issue, stdResId, request);
+	}
+
+	// 核心任务结果数据
+	private String insertCore(Issue issue, String stdResId, HttpServletRequest request) {
+		StandardResult standardResult = standardResultService.queryStdResById(stdResId);
+		if (StringUtils.isBlank(standardResult.getDateCount())) {
+			List<String[]> cluster = standardResultService.getStdResContentById(stdResId);
+			if (cluster == null) {
+				return null;
+			}
+			String dateCount = standardResultService.getDateCount(cluster);
+			String srcCount = standardResultService.getSourceCount(cluster);
+			standardResult.setDateCount(dateCount);
+			standardResult.setSourceCount(srcCount);
+			standardResultService.updateByPrimaryKey(standardResult);
+		}
+
+		CoreResultQueryCondition coreResultQueryCondition = new CoreResultQueryCondition();
+		coreResultQueryCondition.setIssueId(issue.getIssueId());
+
+		List<CoreResult> list = coreResultService.queryCoreRessByIssueId(issue.getIssueId());
+		if (!list.isEmpty()) {
+			coreResultQueryCondition.setCoreResId(list.get(0).getCoreRid());
+			int update = coreResultService.update(coreResultQueryCondition, request);
+
+			return list.get(0).getCoreRid();
+		} else {
+			// 给改核心数据结果取名
+			coreResultQueryCondition.setCoreResName(standardResult.getResName());
+			coreResultQueryCondition.setCoreResName(issue.getIssueName());
+			// 这个属性不在core_result字段里。但是为了生成核心数据需要
+			coreResultQueryCondition.setStdResId(stdResId);
+			return coreResultService.insertCore(coreResultQueryCondition,standardResult.getContentName(), request);
 		}
 	}
 
@@ -201,7 +266,7 @@ public class IssueServiceImpl implements IssueService {
 	public List<Issue> queryIssue(IssueQueryCondition con) {
 		// TODO Auto-generated method stub
 		List<Issue> list = issueDao.queryIssue(con);
-		System.out.println(list.size() + "service");
+		// System.out.println(list.size() + "service");
 		return list;
 	}
 
@@ -234,6 +299,34 @@ public class IssueServiceImpl implements IssueService {
 		}
 
 		return issueDao.deleteIssueById(issueId, user);
+	}
+
+	@Override
+	public int deleteIssueAllById(String issueId, HttpServletRequest request) {
+		String user = userService.getCurrentUser(request);
+		
+		int del1 = 1,del2 = 1, del3 = 1;
+		
+		Issue issue = queryIssueById(issueId);
+		deleteExtensiveIssue(issueId, issue.getIssueHold());
+		del1 = issueDao.deleteIssueById(issueId, user);
+		
+		if(!StringUtils.isBlank(issue.getIssueHold())){
+			issue = queryIssueById(issue.getIssueHold());
+			deleteStandardIssueAnd(issue.getIssueId(), issue.getIssueBelongTo(), issue.getIssueHold());
+			del2 = issueDao.deleteIssueById(issue.getIssueId(), user);
+			if(!StringUtils.isBlank(issue.getIssueHold())){
+				issue = queryIssueById(issue.getIssueHold());
+				deleteCoreIssue(issue.getIssueId(), issue.getIssueBelongTo());
+				del3 = issueDao.deleteIssueById(issue.getIssueId(), user);
+			}
+		}
+		
+		if(del1 > 0 && del2 > 0 && del2 > 0){
+			return 1;
+		}
+		
+		return 0;
 	}
 
 	private void deleteExtensiveIssue(String issueId, String holdIssueId) {
@@ -275,6 +368,49 @@ public class IssueServiceImpl implements IssueService {
 			}
 
 			// 更新与之相连的准数据的issue_belong_to值
+			Issue holdIssue = queryIssueById(holdIssueId);
+			holdIssue.setIssueBelongTo(StringUtils.EMPTY);
+			issueDao.updateIssueInfo(holdIssue);
+		}
+	}
+	
+	//删除standardIssue并且删除 文件系统内的 standard_content
+	private void deleteStandardIssueAnd(String issueId, String belongToIssueId, String holdIssueId) {
+		List<StandardResult> stdResList = standardResultService.queryStdRessByIssueId(issueId);
+
+		boolean belongToExists = !StringUtils.isBlank(belongToIssueId);
+		List<String> delList = new ArrayList<String>();
+		for (StandardResult standardResult : stdResList) {
+			if (belongToExists) {
+				delList.add(standardResult.getContentName());
+			} else {
+				FileUtil.delete(DIRECTORY.CONTENT + standardResult.getContentName());
+			}
+			FileUtil.delete(DIRECTORY.STDRES_CONTENT + standardResult.getContentName());
+			FileUtil.delete(DIRECTORY.STDRES_CLUSTER + standardResult.getStdRid());
+			FileUtil.delete(DIRECTORY.STDRES_COUNT + standardResult.getStdRid());
+		}
+
+		if (belongToExists) {
+			List<Result> resList = resultService.queryResultsByIssueId(belongToIssueId);
+			Set<String> remainSet = new HashSet<String>();
+			for (Result result : resList) {
+				remainSet.add(result.getRid());
+			}
+
+			for (String del : delList) {
+				if (!remainSet.contains(del)) {
+					FileUtil.delete(DIRECTORY.CONTENT + del);
+				}
+			}
+
+			// 更新与之相连的准数据的issue_hold值
+			Issue belongToIssue = queryIssueById(belongToIssueId);
+			belongToIssue.setIssueHold(StringUtils.EMPTY);
+			issueDao.updateIssueInfo(belongToIssue);
+		}
+
+		if (!StringUtils.isBlank(holdIssueId)) {
 			Issue holdIssue = queryIssueById(holdIssueId);
 			holdIssue.setIssueBelongTo(StringUtils.EMPTY);
 			issueDao.updateIssueInfo(holdIssue);
@@ -473,18 +609,33 @@ public class IssueServiceImpl implements IssueService {
 			}
 		}
 		Result result = new Result();
-		result.setRid(UUID.randomUUID().toString());
 		result.setIssueId(issueId);
 		result.setCreator(user);
+		// 寻找数据库中同一个人创建的任务是否有过聚类记录
+		List<Result> resultslist = resultDao.selectByissueIdAndUser(issueId, user);
+		// 如果有记录，则rid不变；否则，生成新的
+		if (resultslist == null) {
+			result.setRid(UUID.randomUUID().toString());
+		} else {
+			result.setRid(resultslist.get(0).getRid());
+		}
 		result.setCreateTime(new Date());
 		result.setComment(comment);
+		// 以上是数据库的记录，以下是聚类的结果
 		ResultWithContent rc = new ResultWithContent();
 		rc.setResult(result);
 		rc.setContent(contentWithAttr);
 		rc.setOrigCluster(ConvertUtil.toStringListB(cluster));
 		rc.setOrigCount(ConvertUtil.toStringList(count));
-		int update = resultDao.insert(rc);
-		if (update <= 0) {
+		int operateResult = 0;
+		if (resultslist == null) { // 没有查找到记录
+			System.out.println("*********数据中没有");
+			operateResult = resultDao.insert(rc);
+		} else {
+			System.out.println("***************有");
+			operateResult = resultDao.update(rc);
+		}
+		if (operateResult <= 0) {
 			return null;
 		}
 		// 插入数据库完成
@@ -540,15 +691,15 @@ public class IssueServiceImpl implements IssueService {
 		int titleIndex = AttrUtil.findIndexOfTitle(attrs);
 		content = resortContent(content, titleIndex);
 		for (String[] string : content) {
-			System.out.println(string[titleIndex]);
+			// System.out.println(string[titleIndex]);
 		}
 		// 聚类
 		List<List<Integer>> clusterResult = miningService.cluster(content, converterType, algorithmType, granularity);
 		for (List<Integer> list : clusterResult) {
 			for (Integer integer : list) {
-				System.out.print(integer + "  ");
+				// System.out.print(integer + " ");
 			}
-			System.out.println();
+			// System.out.println();
 		}
 		// 每个String[]都是某个类簇的数据ID的集合。
 		List<String[]> cluster = ConvertUtil.toStringListB(clusterResult);
@@ -565,11 +716,11 @@ public class IssueServiceImpl implements IssueService {
 	public String queryLinkedIssue(String issueId, String issueType) {
 		Issue issue = queryIssueById(issueId);
 		if (issueType.equals(Constant.ISSUETYPE_EXTENSIVE)) {
-			//如果issue为核心数据
-			if(issue.getIssueType().equals(Constant.ISSUETYPE_CORE)){
+			// 如果issue为核心数据
+			if (issue.getIssueType().equals(Constant.ISSUETYPE_CORE)) {
 				// 将issue变为该核心数据对应的准数据
 				issue = queryIssueById(issue.getIssueBelongTo());
-				if(issue == null){
+				if (issue == null) {
 					return null;
 				}
 			}
@@ -581,18 +732,17 @@ public class IssueServiceImpl implements IssueService {
 				return issue.getIssueBelongTo();
 			}
 		} else {
-			//如果issue为泛数据
-			if(issue.getIssueType().equals(Constant.ISSUETYPE_EXTENSIVE)){
-				//将issue变为该泛数据对应的准数据
+			// 如果issue为泛数据
+			if (issue.getIssueType().equals(Constant.ISSUETYPE_EXTENSIVE)) {
+				// 将issue变为该泛数据对应的准数据
 				issue = queryIssueById(issue.getIssueHold());
-				if(issue == null){
+				if (issue == null) {
 					return null;
 				}
 			}
 			return issue.getIssueHold();
 		}
 	}
-
 
 	@Override
 	public long queryIssueCount(IssueQueryCondition con) {

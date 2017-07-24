@@ -81,17 +81,17 @@ public class MiningServiceImpl implements MiningService {
         //如果选择的是canopy算法
         if (algorithmType == ALGORIRHMTYPE.CANOPY) 
         {
-        	 System.out.println("使用的是CANOPY");
+        	 //System.out.println("使用的是CANOPY");
         	 Canopy canopy = new Canopy();
              canopy.setVectors(vectors);
              //相似度方式的选择
              if (granularity == GRANULARITY.AcrossSimilarity) {
            	  canopy.setSimi(new AcrossSimilarity(vectors)); 
-           	  System.out.println("选择的是粗粒度AcrossSimilarity");
+           	  //System.out.println("选择的是粗粒度AcrossSimilarity");
    			
              } else if(granularity == GRANULARITY.CosSimilarity){
    			  canopy.setSimi(new CosSimilarity(vectors));
-   			  System.out.println("选择的是细粒度CosSimilarity");
+   			  //System.out.println("选择的是细粒度CosSimilarity");
              }
              //设置阀值
              canopy.setThreshold(Config.SIMILARITYTHRESHOLD);
@@ -108,7 +108,7 @@ public class MiningServiceImpl implements MiningService {
 		}
         else if (algorithmType == ALGORIRHMTYPE.KMEANS) 
         {
-        	 System.out.println("使用的是KMEANS");
+        	 //System.out.println("使用的是KMEANS");
         	 Canopy canopy = new Canopy();
              canopy.setVectors(vectors);
              //相似度方式的选择
@@ -128,11 +128,11 @@ public class MiningServiceImpl implements MiningService {
                //相似度方式的选择
                  if (granularity == GRANULARITY.AcrossSimilarity) {
                 	 kmeans.setSimi(new AcrossSimilarity(vectors)); 
-               	  System.out.println("选择的是粗粒度AcrossSimilarity");
+               	  //System.out.println("选择的是粗粒度AcrossSimilarity");
        			
                  } else if(granularity == GRANULARITY.CosSimilarity){
                 	 kmeans.setSimi(new CosSimilarity(vectors));
-       			  System.out.println("选择的是细粒度CosSimilarity");
+       			  //System.out.println("选择的是细粒度CosSimilarity");
                  }
                  kmeans.setK(k);
                  
@@ -153,16 +153,16 @@ public class MiningServiceImpl implements MiningService {
 		}
         else if (algorithmType == ALGORIRHMTYPE.DBSCAN) 
         {
-        	 System.out.println("使用的是DBSCAN");
+        	 //System.out.println("使用的是DBSCAN");
         	 DBScan dbscan = new DBScan();
         	 dbscan.setVectors(vectors);
              if (granularity == GRANULARITY.AcrossSimilarity) {
             	  dbscan.setSimi(new AcrossSimilarity(vectors)); 
-              	  System.out.println("选择的是粗粒度AcrossSimilarity");
+              	  //System.out.println("选择的是粗粒度AcrossSimilarity");
       			
                 } else if(granularity == GRANULARITY.CosSimilarity){
                   dbscan.setSimi(new CosSimilarity(vectors));
-      			  System.out.println("选择的是细粒度CosSimilarity");
+      			  //System.out.println("选择的是细粒度CosSimilarity");
                 }
              //设置阀值
              dbscan.setMinPts(Config.MinPts);
@@ -387,5 +387,81 @@ public class MiningServiceImpl implements MiningService {
         reMap.put(KEY.MINING_AMOUNT_TYPE, typeAmountMap);
         return reMap;
     }
+
+    /**
+     * 统计准数据某个类各个维度信息
+     * content 类的所有记录
+     */
+    @Override
+	public Map<String, Map<String, Map<String, Integer>>> statisticStdRes(List<String[]> content, int interval) {
+		Map<String, Map<String, Map<String, Integer>>> map =
+                new TreeMap<String, Map<String, Map<String, Integer>>>(new Comparator<String>() {
+                    @Override
+                    public int compare(String o1, String o2) {
+                        return o1.compareTo(o2);
+                    }
+                });
+        //属性行
+        String[] attrs = content.remove(0);
+        int indexOfUrl = AttrUtil.findIndexOfUrl(attrs);
+        int indexOfTime = AttrUtil.findIndexOfTime(attrs);
+        
+        for (String[] row : content) {
+           
+            if (CommonUtil.isEmptyArray(row)) {
+                continue;
+            }
+            Website website = websiteDao.queryByUrl(CommonUtil.getPrefixUrl(row[indexOfUrl]));
+            String level = website.getLevel();
+            String type = website.getType();
+            String timeKey = CommonUtil.getTimeKey(row[indexOfTime], interval);
+            Map<String, Map<String, Integer>> timeMap = map.get(timeKey);
+            if (timeMap == null) {
+                timeMap = new HashMap<String, Map<String, Integer>>();
+                Map<String, Integer> typeMap = new HashMap<String, Integer>();
+                Map<String, Integer> levelMap = new HashMap<String, Integer>();
+                typeMap.put(type, 1);
+                levelMap.put(level, 1);
+                timeMap.put(Constant.MEDIA_EN, levelMap);
+                timeMap.put(Constant.INFOTYPE_EN, typeMap);
+                map.put(timeKey, timeMap);
+            } else {
+                Map<String, Integer> typeMap = timeMap.get(Constant.INFOTYPE_EN);
+                if (null == typeMap) {
+                    typeMap = new HashMap<String, Integer>();
+                    typeMap.put(type, 1);
+                } else {
+                    if (typeMap.get(type) == null) {
+                        typeMap.put(type, 1);
+                    } else {
+                        typeMap.put(type, typeMap.get(type) + 1);
+                    }
+                }
+
+                Map<String, Integer> levelMap = timeMap.get(Constant.MEDIA_EN);
+                if (null == levelMap) {
+                    levelMap = new HashMap<String, Integer>();
+                    levelMap.put(level, 1);
+                } else {
+                    if (levelMap.get(level) == null) {
+                        levelMap.put(level, 1);
+                    } else {
+                        levelMap.put(level, levelMap.get(level) + 1);
+                    }
+                }
+                timeMap.put(Constant.MEDIA_EN, levelMap);
+                timeMap.put(Constant.INFOTYPE_EN, typeMap);
+                map.put(timeKey, timeMap);
+            }
+        }
+        for (String time : map.keySet()) {
+            Map<String, Map<String, Integer>> timeMap = map.get(time);
+            Map<String, Integer> mediaAttention = calAttention(timeMap.get(Constant.MEDIA_EN));
+            Map<String, Integer> netizenAttention = calAttention(timeMap.get(Constant.INFOTYPE_EN));
+            timeMap.put(Constant.NETIZENATTENTION_EN, netizenAttention);
+            timeMap.put(Constant.MEDIAATTENTION_EN, mediaAttention);
+        }
+        return map;
+	}
 
 }

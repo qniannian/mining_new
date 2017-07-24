@@ -11,6 +11,10 @@ import com.hust.mining.model.params.CoreResultQueryCondition;
 public interface CoreResultService {
 	int insert(CoreResultQueryCondition con, HttpServletRequest request);
 
+	String insertCore(CoreResultQueryCondition con,String contentName, HttpServletRequest request);
+	
+	int update(CoreResultQueryCondition con, HttpServletRequest request);
+	
     int deleteById(String coreResId);
     
     CoreResult queryCoreResById(String coreResId);

@@ -61,7 +61,7 @@ var  page = {
         var pageCount = listCount%page.pagelistcount>0?parseInt(listCount/page.pagelistcount)+1:parseInt(listCount/page.pagelistcount);
        //页码输入框监听事件
         $("#"+pageId +">li>input[id='turnPageNum']").keyup(function(){
-            console.log("turnPageNum keyup")
+ //           console.log("turnPageNum keyup")
             $(this).val($(this).val().replace(/[^0-9]/g,''));
             if($(this).val()>pageCount){
                 $("#turnPage").attr("class","turnPageDisable");

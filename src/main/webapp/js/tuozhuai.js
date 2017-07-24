@@ -123,12 +123,12 @@ function up_del() {
                         .val();
                 var sourceType = $(this).parent("li").children(
                         "select.select04").val();
-                console.log(arrary);
-                console.log(fileName);
-                console.log(time);
-                console.log(urlIndex);
-                console.log(titleIndex);
-                console.log(sourceType);
+ //               console.log(arrary);
+ //               console.log(fileName);
+ //               console.log(time);
+ //               console.log(urlIndex);
+ //               console.log(titleIndex);
+ //               console.log(sourceType);
                 /* cookie_value1="'"+item.fileId+"'"; */
                 upFile(fileArray[parseInt(arrary)], urlIndex, titleIndex, time,
                         sourceType);
@@ -161,11 +161,11 @@ function all_up() {
             var titleIndex = liGroup.eq(i).children("select.select02").val();
             var time = liGroup.eq(i).children("select.select03").val();
             var sourceType = liGroup.eq(i).children("select.select04").val();
-            console.log(num);
-            console.log(time);
-            console.log(urlIndex);
-            console.log(titleIndex);
-            console.log(sourceType);
+ //           console.log(num);
+ //           console.log(time);
+ //           console.log(urlIndex);
+ //           console.log(titleIndex);
+ //           console.log(sourceType);
             upFile(file, urlIndex, titleIndex, time, sourceType);
         }
         localRefresh();
@@ -179,8 +179,8 @@ function upFile(filex, urlIndex, titleIndex, time, sourceType) {
     form.append("titleIndex", titleIndex);
     form.append("timeIndex", time);
     form.append("sourceType", sourceType);
-    console.log("(((((");
-    console.log(form);
+ //   console.log("(((((");
+ //   console.log(form);
     $.ajax({
         async : false,
         crossDomain : true,
